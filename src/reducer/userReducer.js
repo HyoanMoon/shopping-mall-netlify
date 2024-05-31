@@ -1,9 +1,24 @@
 import * as types from "../constants/user.constants";
-const initialState = {};
+const initialState = {
+  error: null,
+};
 
-function userReducer(state = initialState, action) {
-  const { type, payload } = action;
-  return state;
-}
+const userReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case types.REGISTER_USER_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case types.REGISTER_USER_SUCCESS:
+      return {
+        ...state,
+        error: null,
+      };
+    // 기타 케이스...
+    default:
+      return state;
+  }
+};
 
 export default userReducer;

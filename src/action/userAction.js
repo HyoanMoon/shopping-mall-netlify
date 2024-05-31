@@ -1,3 +1,4 @@
+
 import api from "../utils/api";
 import * as types from "../constants/user.constants";
 import { commonUiActions } from "./commonUiAction";
@@ -15,7 +16,7 @@ const registerUser =
       dispatch({type: types.REGISTER_USER_REQUEST})
       const response = await api.post("/user",{email, name, password});
       if(response.status !==200) 
-        throw new Error(response.error) //catch에서 에러 잡음
+        throw new Error(response.data.message) //catch에서 에러 잡음
 
       dispatch({type: types.REGISTER_USER_SUCCESS});
       dispatch(commonUiActions.showToastMessage("Registration Successful!","success"));
@@ -24,7 +25,7 @@ const registerUser =
 
 
     }catch(error){
-      dispatch({type: types.REGISTER_USER_FAIL, payload:error})
+      dispatch({type: types.REGISTER_USER_FAIL, payload:error.message})
     }
   };
 export const userActions = {
@@ -34,3 +35,4 @@ export const userActions = {
   loginWithGoogle,
   registerUser,
 };
+

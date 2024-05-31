@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { userActions } from "../action/userAction";
+import { Link } from 'react-router-dom';
 import "../style/register.style.css";
 const RegisterPage = () => {
   const dispatch = useDispatch();
@@ -61,7 +63,7 @@ const RegisterPage = () => {
       {error && (
         <div>
           <Alert variant="danger" className="error-message">
-            {error}
+            {error} <Link to='/login'>Sign In</Link>
           </Alert>
         </div>
       )}
@@ -130,3 +132,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
