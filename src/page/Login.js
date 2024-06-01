@@ -3,6 +3,8 @@ import { Container, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../action/userAction";
+import { useEffect } from 'react';
+
 
 import "../style/login.style.css";
 
@@ -17,21 +19,35 @@ const Login = () => {
   const loginWithEmail = (event) => {
     event.preventDefault();
     //이메일,패스워드를 가지고 백엔드로 보내기
+    dispatch(userActions.loginWithEmail({email, password}));
+    
   };
 
   const handleGoogleLogin = async (googleData) => {
     // 구글로 로그인 하기
   };
 
-  if (user) {
-    navigate("/");
-  }
+  // if (user) {
+  //   navigate("/");
+  // }
+
+
+  useEffect(() => {
+    // 사용자가 로그인되면 홈으로 이동
+    if (user) {
+      navigate("/");
+      dispatch(userActions.clearError());
+    }
+  }, [user, navigate, dispatch]);
+
+
   return (
     <>
       <Container className="login-area">
         {error && (
           <div className="error-message">
-            <Alert variant="danger">{error}</Alert>
+            <Alert variant="danger" className="error-message">{error}
+            </Alert>
           </div>
         )}
         <Form className="login-form" onSubmit={loginWithEmail}>
