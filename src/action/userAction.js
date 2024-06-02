@@ -44,7 +44,9 @@ const registerUser =
       }
     };
 
-const clearError = () => ({ type: 'CLEAR_ERROR' });
+const clearError = () => async (dispatch) => {
+      dispatch({ type: types.CLEAR_ERROR_MESSAGE});
+    };
 
 
 

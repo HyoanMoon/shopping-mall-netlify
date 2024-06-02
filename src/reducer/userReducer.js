@@ -2,7 +2,7 @@ import * as types from "../constants/user.constants";
 const initialState = {
   loading:false,
   user:null,
-  error: null,
+  error: "",
 
 };
 
@@ -33,15 +33,18 @@ function userReducer(state = initialState, action) {
           error: payload
         } //Fail
 
-    case 'CLEAR_ERROR': 
-        return {
-          ...state,
-          error: null,
-        };
-        
+    case types.CLEAR_ERROR_MESSAGE:
+      return {
+        ...state,
+        error: ""
+      };
+
     default:
         return state;
   }
 }
 export default userReducer;
+
+
+
 

@@ -16,6 +16,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const error = useSelector((state) => state.user.error);
 
+  useEffect(() => {
+    return () => {
+      dispatch(userActions.clearError());
+    };
+  }, [dispatch]);
+
+
   const loginWithEmail = (event) => {
     event.preventDefault();
     //이메일,패스워드를 가지고 백엔드로 보내기
@@ -27,18 +34,11 @@ const Login = () => {
     // 구글로 로그인 하기
   };
 
-  // if (user) {
-  //   navigate("/");
-  // }
 
-
-  useEffect(() => {
-    // 사용자가 로그인되면 홈으로 이동
+    // user가 있으면 메인 페이지로 이동 - 이미 로그인한 유저는 로그인 페이지에 못 들어오게 막기 위함
     if (user) {
       navigate("/");
-      dispatch(userActions.clearError());
     }
-  }, [user, navigate, dispatch]);
 
 
   return (
