@@ -3,7 +3,20 @@ import * as types from "../constants/user.constants";
 import { commonUiActions } from "./commonUiAction";
 import * as commonTypes from "../constants/commonUI.constants";
 
-const loginWithToken = () => async (dispatch) => { };
+const loginWithToken = () => async (dispatch) => {
+  try{
+    dispatch({type: types.LOGIN_WITH_TOKEN_REQUEST})
+    const response = await api.get("/user/me")
+    if(response.status !== 200)
+      throw new Error(response.data.message)
+    console.log("rrrrr", response);
+    dispatch({type: types.LOGIN_WITH_TOKEN_SUCCESS, payload: response.data})
+
+  }catch(error){
+    dispatch({ type: types.LOGIN_WITH_TOKEN_FAIL, payload: error.message })
+    dispatch(logout())
+  }
+};
 
 const loginWithEmail =
   ({ email, password }) =>
@@ -22,7 +35,11 @@ const loginWithEmail =
       }
     };
 
-const logout = () => async (dispatch) => { };
+const logout = () => async (dispatch) => {
+  dispatch({type: types.LOGOUT})
+  sessionStorage.removeItem("token");
+  
+};
 
 const loginWithGoogle = (token) => async (dispatch) => { };
 

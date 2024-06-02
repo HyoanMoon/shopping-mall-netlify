@@ -11,6 +11,7 @@ function userReducer(state = initialState, action) {
   switch(type){
     case types.REGISTER_USER_REQUEST:
       case types.LOGIN_REQUEST:
+        case types.LOGIN_WITH_TOKEN_REQUEST:
         return{
           ...state,
           loading:true,
@@ -18,6 +19,7 @@ function userReducer(state = initialState, action) {
         } //Request 
 
     case types.LOGIN_SUCCESS:
+      case types.LOGIN_WITH_TOKEN_SUCCESS:
         return{
           ...state,
           loading:false,
@@ -32,7 +34,16 @@ function userReducer(state = initialState, action) {
           loading:false,
           error: payload
         } //Fail
-
+    case types.LOGIN_WITH_TOKEN_FAIL:
+      return{
+        ...state,
+        loading:false
+      }
+    case types.LOGOUT:
+      return{
+        ...state,
+        user:null
+      };
     case types.CLEAR_ERROR_MESSAGE:
       return {
         ...state,
