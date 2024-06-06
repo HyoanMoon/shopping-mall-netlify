@@ -12,7 +12,7 @@ import ProductTable from "../component/ProductTable";
 
 const AdminProduct = () => {
   const navigate = useNavigate();
-  const {productList} = useSelector( (state)=> state.product)
+  const {productList,totalPageNum} = useSelector( (state)=> state.product)
   const [query, setQuery] = useSearchParams();
   const dispatch = useDispatch();
   const [showDialog, setShowDialog] = useState(false);
@@ -35,7 +35,6 @@ const AdminProduct = () => {
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(()=> {
-
     dispatch(productActions.getProductList({ ...searchQuery }))
   },[query])
 
@@ -44,7 +43,6 @@ const AdminProduct = () => {
     if(searchQuery.name === "") {
       delete searchQuery.name
     }
-    // console.log(searchQuery); searchQuery === 객체
     const params = new URLSearchParams(searchQuery); // URLSearchParams 객체를 Query 형태로 바꿔줌. URL의 파라미터 값을 확인할때
     const query = params.toString();
     navigate("?" + query);
@@ -71,7 +69,10 @@ const AdminProduct = () => {
 
   const handlePageClick = ({ selected }) => {
     //  쿼리에 페이지값 바꿔주기
-  };
+    setSearchQuery({...searchQuery,page:selected+1})
+    
+  }; 
+//∙Search function
 // searchbox에서 검색어를 읽어온다 => 엔터를 치면 => searchQuery객체가 업데이트가 된다 {name : 스트레이트 팬츠}
 // =>  searchQuery 객체 안에 아이템 기준으로 url을 새로 생성해서 다시 호출 (&name =스트레이트+팬츠)
 // => url 쿼리 읽어오기 => url쿼리 기준으로 be에 검색조건과 함께 호출한다.
@@ -100,8 +101,8 @@ const AdminProduct = () => {
           nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={5}
-          pageCount={100}
-          forcePage={2} // 1페이지면 2임 여긴 한개씩 +1 해야함
+          pageCount={totalPageNum} // 전체 페이지
+          forcePage={searchQuery.page-1} // 1페이지면 2임 여긴 한개씩 +1 해야함
           previousLabel="< previous"
           renderOnZeroPageCount={null}
           pageClassName="page-item"
@@ -113,9 +114,9 @@ const AdminProduct = () => {
           breakLabel="..."
           breakClassName="page-item"
           breakLinkClassName="page-link"
-          containerClassName="pagination"
+          containerClassName="pagination display-center list-style-none"
           activeClassName="active"
-          className="display-center list-style-none"
+          //className="display-center list-style-none"
         />
       </Container>
 
