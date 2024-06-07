@@ -20,7 +20,7 @@ const InitialFormData = {
   price: 0,
 };
 const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
-  const selectedProduct = useSelector((state) => state.product.selectedProduct);
+  const {selectedProduct} = useSelector((state) => state.product);
   const { error } = useSelector((state) => state.product);
 
   const [formData, setFormData] = useState(
@@ -51,21 +51,22 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     if(stock.length === 0) {
       return setStockError(true);
     }
-    // 재고를 배열에서 객체로 바꿔주기
+    // 재고를 어레이에서 객체로 바꿔주기    
     const totalStock = stock.reduce((total,item)=> {
       return {...total, [item[0]]:parseInt(item[1]) }
     },{}) 
-  
     // [['M',2]] 에서 {M:2}로
+
     if (mode === "new") {
       //새 상품 만들기
       dispatch(productActions.createProduct({...formData,stock:totalStock}));
       setFormData({ ...InitialFormData });
       setStock([]);
-      setShowDialog(false)
-    
+      setShowDialog(false);
     } else {
       // 상품 수정하기
+      dispatch(productActions.editProduct({...formData, stock:totalStock}, selectedProduct._id));
+      setShowDialog(false);
     }
   };
 
@@ -130,9 +131,18 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   useEffect(() => {
     if (showDialog) {
       if (mode === "edit") {
-        // 선택된 데이터값 불러오기 (재고 형태 객체에서 어레이로 바꾸기)
+        // 선택된 데이터값 불러오기 (stock은 객체에서 어레이로 바꾸기)
+        setFormData(selectedProduct)
+        const stockArray = Object.keys(selectedProduct.stock).map((size)=>[size, selectedProduct.stock[size]]) 
+        // object.keys() 오브젝트의 key를 어레이로 바꿔주겠다. selectedProduct.stock[size]= 사이즈의 key 값
+        setStock(stockArray);
+
+
       } else {
         // 초기화된 값 불러오기
+        setFormData({...InitialFormData});
+        setStock([]);
+
       }
     }
   }, [showDialog]);

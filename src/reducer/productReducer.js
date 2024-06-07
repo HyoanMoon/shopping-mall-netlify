@@ -3,7 +3,8 @@ const initialState = {
   loading:false,
   error:"",
   productList:[],
-  totalPageNum: 1
+  totalPageNum: 1,
+  selectedProduct:null
 };
 
 function productReducer(state = initialState, action) {
@@ -11,11 +12,13 @@ function productReducer(state = initialState, action) {
   switch(type){
     case types.PRODUCT_CREATE_REQUEST:
       case types.PRODUCT_GET_REQUEST:
+        case types.PRODUCT_EDIT_REQUEST:
       return {
         ...state,
         loading :true,
       }
     case types.PRODUCT_CREATE_SUCCESS:
+      case types.PRODUCT_EDIT_SUCCESS:
       return {
         ...state,
         loading :false,
@@ -28,16 +31,21 @@ function productReducer(state = initialState, action) {
         error: "",
         productList: payload.data,
         totalPageNum: payload.totalPageNum
-
-
       }
     case types.PRODUCT_CREATE_FAIL:
       case types. PRODUCT_GET_FAIL:
+        case types.PRODUCT_EDIT_FAIL:
       return{
         ...state,
         loading :false,
         error: payload
       }
+    case types.SET_SELECTED_PRODUCT:
+      return{
+        ...state,
+        selectedProduct :payload,
+      }
+
       default:
         return state;
   }

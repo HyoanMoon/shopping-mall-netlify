@@ -54,7 +54,12 @@ const AdminProduct = () => {
 
   const openEditForm = (product) => {
     //edit모드로 설정하고
+    setMode("edit");
+    // 수정할 아이템을 세팅 -> 리듀서에 저장 => 리듀서에 저장된 선택된 아이템이 뜨도록
+    dispatch({type: types.SET_SELECTED_PRODUCT, payload:product});
     // 아이템 수정다이얼로그 열어주기
+    setShowDialog(true); 
+
   };
 
   const handleClickNewItem = () => {
