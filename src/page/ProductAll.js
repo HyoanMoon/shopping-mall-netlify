@@ -11,7 +11,6 @@ const ProductAll = () => {
   const dispatch = useDispatch();
   const error = useSelector((state) => state.product.error);
   const [query] = useSearchParams();
-
   const searchQuery = query.get("name") || "";
 
   // 처음 로딩하면 상품리스트 불러오기
@@ -19,10 +18,12 @@ const ProductAll = () => {
     dispatch(productActions.getProductList({ name: searchQuery }))
   },[searchQuery])
 
+  const filteredProductList = productList.filter((product) => product.status !== "disactive");
+
   return (
     <Container>
       <Row xs={1} md={4} className="g-4">
-        {productList && productList.map((product) => (
+        {filteredProductList && filteredProductList.map((product) => (
           <Col key={product.id}>
             <ProductCard product={product} />
           </Col>

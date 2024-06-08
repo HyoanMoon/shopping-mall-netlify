@@ -7,6 +7,7 @@ const ProductCard = ({ product }) => {
 
   const showProduct = (id) => {
     // 상품 디테일 페이지로 가기
+    navigate(`/product/${id}`);
   };
 
   return (

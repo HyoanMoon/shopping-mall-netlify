@@ -1,10 +1,12 @@
 import * as types from "../constants/product.constants";
+import ProductDetail from "../page/ProductDetail";
 const initialState = {
   loading:false,
   error:"",
   productList:[],
   totalPageNum: 1,
-  selectedProduct:null
+  selectedProduct:null,
+  productDetail:[]
 };
 
 function productReducer(state = initialState, action) {
@@ -13,12 +15,15 @@ function productReducer(state = initialState, action) {
     case types.PRODUCT_CREATE_REQUEST:
       case types.PRODUCT_GET_REQUEST:
         case types.PRODUCT_EDIT_REQUEST:
+          case types.PRODUCT_DELETE_REQUEST:
+            case types.GET_PRODUCT_DETAIL_REQUEST:
       return {
         ...state,
         loading :true,
       }
     case types.PRODUCT_CREATE_SUCCESS:
       case types.PRODUCT_EDIT_SUCCESS:
+        case types.PRODUCT_DELETE_SUCCESS:
       return {
         ...state,
         loading :false,
@@ -32,9 +37,18 @@ function productReducer(state = initialState, action) {
         productList: payload.data,
         totalPageNum: payload.totalPageNum
       }
+    case types.GET_PRODUCT_DETAIL_SUCCESS:
+      return{
+        ...state,
+        loading :false,
+        error: "",
+        productDetail: payload
+      }
     case types.PRODUCT_CREATE_FAIL:
       case types. PRODUCT_GET_FAIL:
         case types.PRODUCT_EDIT_FAIL:
+          case types.PRODUCT_DELETE_FAIL:
+            case types.GET_PRODUCT_DETAIL_FAIL:
       return{
         ...state,
         loading :false,
