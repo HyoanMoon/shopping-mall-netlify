@@ -9,22 +9,29 @@ import "../style/cart.style.css";
 
 const CartPage = () => {
   const dispatch = useDispatch();
+  const { cartList, totalPrice } = useSelector((state) => state.cart) // 데이터는 스토어에서 가져와서 OrderReceipt으로 넘겨주기 
 
   useEffect(() => {
     //카트리스트 불러오기
+    dispatch(cartActions.getCartList())
   }, []);
 
   return (
     <Container>
       <Row>
         <Col xs={12} md={7}>
-          <div className="text-align-center empty-bag">
+          {cartList.length > 0 ? (
+            cartList.map((item) => (
+              <CartProductCard item={item} key={item._id} />
+            ))
+          ) : (<div className="text-align-center empty-bag">
             <h2>카트가 비어있습니다.</h2>
             <div>상품을 담아주세요!</div>
-          </div>
+          </div>)}
+
         </Col>
         <Col xs={12} md={5}>
-          <OrderReceipt />
+          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />  
         </Col>
       </Row>
     </Container>

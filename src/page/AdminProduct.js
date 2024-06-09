@@ -84,7 +84,7 @@ const AdminProduct = () => {
 // => url 쿼리 읽어오기 => url쿼리 기준으로 be에 검색조건과 함께 호출한다.
   return (
     <div className="locate-center">
-      <Container>
+      <Container> 
         <div className="mt-2">
           <SearchBox
             searchQuery={searchQuery}
