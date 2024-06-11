@@ -21,7 +21,8 @@ function cartReducer(state = initialState, action) {
       return {
         ...state,
         cartItemCount: 0,
-        cartList: []
+        cartList: [],
+        totalPrice: 0
 
       }
     }
