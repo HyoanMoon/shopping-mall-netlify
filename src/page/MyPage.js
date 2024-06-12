@@ -16,7 +16,7 @@ const MyPage = () => {
     dispatch(orderActions.getOrder());
   }, []);
 
-  console.log("order list", orderList);
+  // console.log("order list", orderList);
 
   if (orderList.length === 0) {
     return (

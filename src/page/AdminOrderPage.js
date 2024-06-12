@@ -14,11 +14,12 @@ const AdminOrderPage = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useSearchParams();
   const dispatch = useDispatch();
-  const orderList = useSelector((state) => state.order.orderList);
+  const { orderList } = useSelector((state) => state.order);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
     ordernum: query.get("ordernum") || "",
   });
+  const error = useSelector((state) => state.order.error);
   const [open, setOpen] = useState(false);
   const totalPageNum = useSelector((state) => state.order.totalPageNum);
   const tableHeader = [
@@ -46,6 +47,7 @@ const AdminOrderPage = () => {
     navigate("?" + queryString);
   }, [searchQuery]);
 
+
   const openEditForm = (order) => {
     setOpen(true);
     dispatch({ type: types.SET_SELECTED_ORDER, payload: order });
@@ -66,14 +68,14 @@ const AdminOrderPage = () => {
           <SearchBox
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            placeholder="오더번호"
+            placeholder="Order number"
             field="ordernum"
           />
         </div>
 
         <OrderTable
           header={tableHeader}
-          data={orderList}
+          data= {orderList}
           openEditForm={openEditForm}
         />
         <ReactPaginate
@@ -93,9 +95,9 @@ const AdminOrderPage = () => {
           breakLabel="..."
           breakClassName="page-item"
           breakLinkClassName="page-link"
-          containerClassName="pagination"
+          containerClassName="pagination display-center list-style-none"
           activeClassName="active"
-          className="display-center list-style-none"
+        //className="display-center list-style-none"
         />
       </Container>
 

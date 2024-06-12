@@ -25,7 +25,7 @@ const getOrder = () => async (dispatch) => {
     const response = await api.get("/order")
     console.log("getOrder response", response)
     if (response.status !== 200) throw new Error(response.error)
-    dispatch({ type: types.GET_ORDER_SUCCESS, payload: response.data})
+    dispatch({ type: types.GET_ORDER_SUCCESS, payload: response.data })
 
 
   } catch (error) {
@@ -33,9 +33,38 @@ const getOrder = () => async (dispatch) => {
     dispatch(commonUiActions.showToastMessage(error.error, "error"))
   }
 };
-const getOrderList = (query) => async (dispatch) => { };
+const getOrderList = (query) => async (dispatch) => {
+  try {
+    dispatch({ type: types.GET_ORDER_LIST_REQUEST })
+    const response = await api.get("/order/orderAdmin", {
+      params: {...query}
+    });
+    console.log("rrr",response )
+    console.log("getOrderList response", response)
+    if (response.status !== 200) throw new Error(response.error)
+    dispatch({ type: types.GET_ORDER_LIST_SUCCESS, payload: response.data })
 
-const updateOrder = (id, status) => async (dispatch) => { };
+  } catch (error) {
+    dispatch({ type: types.GET_ORDER_LIST_FAIL, payload: error.error })
+    dispatch(commonUiActions.showToastMessage(error.error, "error"))
+  }
+};
+
+const updateOrder = (id, status) => async (dispatch) => { 
+  try{
+    dispatch({type: types.UPDATE_ORDER_REQUEST});
+    const response = await api.put(`/order/${id}`,{status})
+    if (response.status !== 200) throw new Error(response.error)
+    dispatch({type: types.UPDATE_ORDER_SUCCESS, payload:response.data.data })
+    dispatch(commonUiActions.showToastMessage("Status successfully changed", "success"))
+    dispatch(getOrderList({page:1,ordernum: ""}))
+
+
+  }catch(error) {
+    dispatch({ type: types.UPDATE_ORDER_FAIL, payload: error.error })
+    dispatch(commonUiActions.showToastMessage(error.error, "error"))
+  }
+};
 
 export const orderActions = {
   createOrder,
