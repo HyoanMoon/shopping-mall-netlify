@@ -31,7 +31,7 @@ const PaymentPage = () => {
     city: "",
     zip: "",
   });
-  console.log("shipInfo", shipInfo);
+  // console.log("shipInfo", shipInfo);
 
   const { cartList, totalPrice } = useSelector((state) => state.cart);
 
