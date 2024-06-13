@@ -2,17 +2,18 @@ import api from "../utils/api";
 import * as types from "../constants/user.constants";
 import { commonUiActions } from "./commonUiAction";
 import * as commonTypes from "../constants/commonUI.constants";
+import { type } from "@testing-library/user-event/dist/type";
 
 const loginWithToken = () => async (dispatch) => {
-  try{
-    dispatch({type: types.LOGIN_WITH_TOKEN_REQUEST})
+  try {
+    dispatch({ type: types.LOGIN_WITH_TOKEN_REQUEST })
     const response = await api.get("/user/me")
-    if(response.status !== 200)
+    if (response.status !== 200)
       throw new Error(response.data.message)
 
-    dispatch({type: types.LOGIN_WITH_TOKEN_SUCCESS, payload: response.data})
+    dispatch({ type: types.LOGIN_WITH_TOKEN_SUCCESS, payload: response.data })
 
-  }catch(error){
+  } catch (error) {
     dispatch({ type: types.LOGIN_WITH_TOKEN_FAIL, payload: error.message })
     dispatch(logout())
   }
@@ -24,11 +25,11 @@ const loginWithEmail =
       try {
         dispatch({ type: types.LOGIN_REQUEST })
         const response = await api.post("/user/login", { email, password });
-        if (response.status !== 200)
-          throw new Error(response.data.message) //catch에서 에러 잡음
-      
+        if (response.status !== 200) throw new Error(response.data.message) //catch에서 에러 잡음
+        sessionStorage.setItem("token", response.data.token);
+
         dispatch({ type: types.LOGIN_SUCCESS, payload: response.data });
-        sessionStorage.setItem("token", response.data.token)
+
 
       } catch (error) {
         dispatch({ type: types.LOGIN_FAIL, payload: error.message })
@@ -36,12 +37,26 @@ const loginWithEmail =
     };
 
 const logout = () => async (dispatch) => {
-  dispatch({type: types.LOGOUT})
+  dispatch({ type: types.LOGOUT })
   sessionStorage.removeItem("token");
-  
+
 };
 
-const loginWithGoogle = (token) => async (dispatch) => { };
+const loginWithGoogle = (token) => async (dispatch) => {
+  try {
+    dispatch({ type: types.GOOGLE_LOGIN_REQUEST })
+    const response = await api.post("/user/google", { token });
+    if (response.status !== 200) throw new Error(response.error)
+    sessionStorage.setItem("token", response.data.token);
+    dispatch({ type: types.GOOGLE_LOGIN_SUCCESS, payload: response.data });
+
+
+  } catch (error) {
+    dispatch({ type: types.GOOGLE_LOGIN_FAIL, payload: error.message })
+    dispatch(commonUiActions.showToastMessage(error.error, "error"));
+
+  }
+};
 
 const registerUser =
   ({ email, name, password }, navigate) =>
@@ -62,8 +77,8 @@ const registerUser =
     };
 
 const clearError = () => async (dispatch) => {
-      dispatch({ type: types.CLEAR_ERROR_MESSAGE});
-    };
+  dispatch({ type: types.CLEAR_ERROR_MESSAGE });
+};
 
 
 
