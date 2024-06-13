@@ -46,7 +46,13 @@ const Navbar = ({ user }) => {
      
     }
   };
-
+  const handleMyOrders = () => {
+    if (user) {
+      navigate("/account/purchase");
+    } else {
+      navigate("/login"); // 로그인 페이지로 리다이렉트
+    }
+  };
 
 
   const logout = () => {
@@ -119,10 +125,7 @@ const Navbar = ({ user }) => {
                 })`}</span>
               )}
             </div>
-            <div
-              onClick={() => navigate("/account/purchase")}
-              className="nav-icon"
-            >
+            <div onClick={handleMyOrders} className="nav-icon">
               <FontAwesomeIcon icon={faBox} />
               {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
             </div>
