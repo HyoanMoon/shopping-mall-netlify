@@ -28,6 +28,7 @@ const Navbar = ({ user }) => {
     "Top",
     "Dress",
     "Pants",
+    "Dog"
   ];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
