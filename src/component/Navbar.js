@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -7,8 +7,7 @@ import {
   faSearch,
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { useNavigate,useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../action/userAction";
 import { productActions } from "../action/productAction";
@@ -22,30 +21,34 @@ const Navbar = ({ user }) => {
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
     name: query.get("name") || "",
+    category: query.get("category") || ""
   });
+
   const menuList = [
-    "여성",
-    "Divided",
-    "남성",
-    "신생아/유아",
-    "아동",
-    "H&M HOME",
-    "Sale",
-    "지속가능성",
+    "Top",
+    "Dress",
+    "Pants",
   ];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
 
+  useEffect(() => {
+    // URL 파라미터에서 초기 값 설정
+    setSearchQuery({
+      page: query.get("page") || 1,
+      name: query.get("name") || "",
+      category: query.get("category") || ""
+    });
+  }, [query]);
+
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
-  
-      if (event.target.value === "") {
-        return navigate("/");
-      }
-      navigate(`?name=${event.target.value}`);
-     
+      const value = event.target.value.trim();
+      setSearchQuery({ ...searchQuery, name: value });
+      navigate(`/?name=${value}`);
     }
   };
+
   const handleMyOrders = () => {
     if (user) {
       navigate("/account/purchase");
@@ -54,10 +57,15 @@ const Navbar = ({ user }) => {
     }
   };
 
+  const handleCategoryClick = (category) => {
+    setSearchQuery({ ...searchQuery, category });
+    navigate(`/?category=${category}`);
+  };
 
   const logout = () => {
     dispatch(userActions.logout());
   };
+
   return (
     <div>
       {showSearchBox && (
@@ -69,7 +77,7 @@ const Navbar = ({ user }) => {
                 type="text"
                 placeholder="제품검색"
                 onKeyPress={onCheckEnter}
-                field = "name"
+                defaultValue={searchQuery.name}
               />
             </div>
             <button
@@ -88,7 +96,13 @@ const Navbar = ({ user }) => {
 
         <div className="side-menu-list" id="menu-list">
           {menuList.map((menu, index) => (
-            <button key={index}>{menu}</button>
+            <button
+              key={index}
+              className={searchQuery.category === menu ? "active" : ""}
+              onClick={() => handleCategoryClick(menu)}
+            >
+              {menu}
+            </button>
           ))}
         </div>
       </div>
@@ -114,7 +128,9 @@ const Navbar = ({ user }) => {
             ) : (
               <div onClick={() => navigate("/login")} className="nav-icon">
                 <FontAwesomeIcon icon={faUser} />
-                {!isMobile && <span style={{ cursor: "pointer" }}>로그인</span>}
+                {!isMobile && (
+                  <span style={{ cursor: "pointer" }}>로그인</span>
+                )}
               </div>
             )}
             <div onClick={() => navigate("/cart")} className="nav-icon">
@@ -127,7 +143,9 @@ const Navbar = ({ user }) => {
             </div>
             <div onClick={handleMyOrders} className="nav-icon">
               <FontAwesomeIcon icon={faBox} />
-              {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
+              {!isMobile && (
+                <span style={{ cursor: "pointer" }}>내 주문</span>
+              )}
             </div>
             {isMobile && (
               <div className="nav-icon" onClick={() => setShowSearchBox(true)}>
@@ -147,17 +165,24 @@ const Navbar = ({ user }) => {
         <ul className="menu">
           {menuList.map((menu, index) => (
             <li key={index}>
-              <a href="#">{menu}</a>
+              <a
+                href="#"
+                className={searchQuery.category === menu ? "active" : ""}
+                onClick={() => handleCategoryClick(menu)}
+              >
+                {menu}
+              </a>
             </li>
           ))}
         </ul>
-        {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
+        {!isMobile && (
           <div className="search-box landing-search-box ">
             <FontAwesomeIcon icon={faSearch} />
             <input
               type="text"
               placeholder="제품검색"
               onKeyPress={onCheckEnter}
+              defaultValue={searchQuery.name}
             />
           </div>
         )}

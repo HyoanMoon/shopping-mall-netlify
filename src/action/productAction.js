@@ -9,18 +9,21 @@ const getProductList = (query) => async (dispatch) => {
   try{
     dispatch({type: types.PRODUCT_GET_REQUEST})
     const response = await api.get("/product",{
-      params : {...query}
+      params : {
+        ...query,
+         category: query.category,}
     });
     if(response.status !== 200) throw new Error(response.error);
     
     const filterData = response.data.data.filter((product)=> !product.isDeleted);
     dispatch({type: types.PRODUCT_GET_SUCCESS,   payload: {data: filterData,totalPageNum: response.data.totalPageNum}})
-    // dispatch({type: types.PRODUCT_GET_SUCCESS,payload:response.data})
+    
   
   }catch(error){
     dispatch({type:types.PRODUCT_GET_FAIL,payload:error.error})
   }
 };
+
 const getProductDetail = (id) => async (dispatch) => {
   try{
     dispatch({type: types.GET_PRODUCT_DETAIL_REQUEST});

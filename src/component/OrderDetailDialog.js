@@ -20,6 +20,7 @@ const OrderDetailDialog = ({ open, handleClose }) => {
     handleClose();
   };
 
+
   if (!selectedOrder) {
     return <></>;
   }
@@ -49,6 +50,7 @@ const OrderDetailDialog = ({ open, handleClose }) => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Unit Price</th>
+                <th>Size</th>
                 <th>Qty</th>
                 <th>Price</th>
               </tr>
@@ -60,6 +62,7 @@ const OrderDetailDialog = ({ open, handleClose }) => {
                     <td>{item._id}</td>
                     <td>{item.productId.name}</td>
                     <td>{currencyFormat(item.price)}</td>
+                    <td>{item.size}</td>
                     <td>{item.qty}</td>
                     <td>{currencyFormat(item.price * item.qty)}</td>
                   </tr>

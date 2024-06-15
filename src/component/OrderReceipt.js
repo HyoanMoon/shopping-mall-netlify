@@ -1,5 +1,5 @@
-import React from "react";
-import { Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import { currencyFormat } from "../utils/number";
@@ -7,22 +7,35 @@ import { currencyFormat } from "../utils/number";
 const OrderReceipt = ({ cartList, totalPrice }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
+  const handlePaymentClick = () => {
+    for (const item of cartList) {
+      if (item.qty > item.productId.stock[item.size]) {
+        setModalMessage(
+          `${item.productId.name}의 재고가 부족합니다. (현재 재고: ${item.productId.stock[item.size]}개)`
+        );
+        setShowModal(true);
+        return;
+      }
+    }
+    navigate("/payment");
+  };
 
   return (
     <div className="receipt-container">
       <h3 className="receipt-title">주문 내역</h3>
       <ul className="receipt-list">
-        {cartList.length >0 &&
-        cartList.map((item) => (
-          <li key={item._id}>
-            <div className="display-flex space-between">
-              <div>{item.productId.name}</div>
-
-              <div>₩ {currencyFormat(item.productId.price * item.qty)}</div>
-            </div>
-          </li>
-        ))}
+        {cartList.length > 0 &&
+          cartList.map((item) => (
+            <li key={item._id}>
+              <div className="display-flex space-between">
+                <div>{item.productId.name}</div>
+                <div>₩ {currencyFormat(item.productId.price * item.qty)}</div>
+              </div>
+            </li>
+          ))}
       </ul>
       <div className="display-flex space-between receipt-title">
         <div>
@@ -36,12 +49,11 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
         <Button
           variant="dark"
           className="payment-button"
-          onClick={() => navigate("/payment")}
+          onClick={handlePaymentClick}
         >
           결제 계속하기
         </Button>
       )}
-
       <div>
         가능한 결제 수단 귀하가 결제 단계에 도달할 때까지 가격 및 배송료는
         확인되지 않습니다.
@@ -50,6 +62,19 @@ const OrderReceipt = ({ cartList, totalPrice }) => {
           읽어보기 반품 및 환불
         </div>
       </div>
+
+      {/* Modal */}
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>재고 부족</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            닫기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -11,7 +11,7 @@ const CartPage = () => {
   const dispatch = useDispatch();
   const { cartList, totalPrice } = useSelector((state) => state.cart) // 데이터는 스토어에서 가져와서 OrderReceipt으로 넘겨주기 
 
-  // console.log("cartList",cartList);
+ console.log("cartList",cartList);
 
   useEffect(() => {
     //카트리스트 불러오기

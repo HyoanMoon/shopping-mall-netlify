@@ -12,13 +12,21 @@ const CartProductCard = ({ item }) => {
   const handleQtyChange = (id, value) => {
     //아이템 수량을 수정한다
     dispatch(cartActions.updateQty(id, value));
-    console.log(value)
   };
 
   const deleteCart = (id, qty) => {
     //아이템을 지운다
     dispatch(cartActions.deleteCartItem(id, qty));
   };
+  const stockInfo = Object.keys(item.productId.stock).map(size => {
+    const stockCount = item.productId.stock[size];
+    const stockAlert = stockCount <= 5 && stockCount > 0 ? `${stockCount} items left` : '';
+    return {
+      size,
+      stockCount,
+      stockAlert
+    };
+  });
 
   return (
     <div className="product-card-cart">
@@ -36,7 +44,7 @@ const CartProductCard = ({ item }) => {
               <FontAwesomeIcon
                 icon={faTrash}
                 width={24}
-                onClick={() => deleteCart(item._id,item.qty )}
+                onClick={() => deleteCart(item._id, item.qty)}
               />
             </button>
           </div>
@@ -45,6 +53,16 @@ const CartProductCard = ({ item }) => {
             <strong>₩ {currencyFormat(item.productId.price)}</strong>
           </div>
           <div>Size: {item.size.toUpperCase()}</div>
+
+          {stockInfo.map(info => (
+            info.size.toUpperCase() === item.size.toUpperCase() && info.stockAlert && (
+              <div key={info.size} className="warning-message">
+              {info.stockAlert}
+              </div> 
+            )
+          ))}
+          
+
           <div>Total: ₩ {currencyFormat(item.productId.price * item.qty)} </div>
           <div>
             Quantity:
