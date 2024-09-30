@@ -1,1 +1,1 @@
-/api/* http://hyoan-shopping-mall-hnm.ap-northeast-2.elasticbeanstalk.com/api/:splat 200
+/api/* http://hnm-hyoanmoon.ca-central-1.elasticbeanstalk.com/api/:splat 200
